@@ -9,8 +9,13 @@ def normalize_text(text: str) -> str:
 
 def categorize_transaction(description: str, rules: list):
     desc = normalize_text(description)
+    
+    sorted_rules = sorted(
+        rules,
+        key=lambda r: (r.priority, -len(r.keyword))
+    )
 
-    for rule in rules:
+    for rule in sorted_rules:
         keyword = normalize_text(rule.keyword)
 
         if keyword in desc:

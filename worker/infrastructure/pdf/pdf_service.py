@@ -56,14 +56,11 @@ def parse_nubank_invoice(file_path: str) -> list[Transaction]:
     year = extract_year(text)
 
     # Regex mais robusto:
-    pattern = (
-        r"(\d{2})\s+"
-        r"(JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\s+"
-        r"(.*?)\s+"
-        r"R\$\s*(-?\d+,\d{2})"
+    TRANSACTION_PATTERN = re.compile(
+        r"^(\d{2})\s+(JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ).*?([\d]+\,[\d]{2})$"
     )
 
-    matches = re.findall(pattern, text)
+    matches = re.findall(TRANSACTION_PATTERN, text)
 
     for day, month_str, description, amount_str in matches:
 
