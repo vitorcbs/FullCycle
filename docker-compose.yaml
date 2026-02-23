@@ -14,7 +14,7 @@ services:
     image: localstack/localstack:latest
     container_name: localstack
     environment:
-      - SERVICES=s3
+      - SERVICES=s3,sqs
       - DEBUG=1
       - AWS_DEFAULT_REGION=us-east-1
     ports:
@@ -39,6 +39,8 @@ services:
       context: .
       dockerfile: worker/Dockerfile
     container_name: worker
+    environment:
+      - PYTHONUNBUFFERED=1
     depends_on:
       - postgres
       - localstack
