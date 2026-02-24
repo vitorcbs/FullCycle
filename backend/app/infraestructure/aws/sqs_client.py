@@ -1,6 +1,11 @@
+import json
+
 import boto3
 
+from app.infraestructure.aws.message_schema import QueueMessage
+
 QUEUE_NAME = "invoice-processing"
+
 
 def get_sqs_client():
     return boto3.client(
@@ -11,15 +16,17 @@ def get_sqs_client():
         region_name="us-east-1",
     )
 
+
 def create_queue_if_not_exists():
     sqs = get_sqs_client()
     sqs.create_queue(QueueName=QUEUE_NAME)
 
-def send_message(message: str):
+
+def send_message(message: QueueMessage):
     sqs = get_sqs_client()
     queue_url = sqs.get_queue_url(QueueName=QUEUE_NAME)["QueueUrl"]
 
     sqs.send_message(
         QueueUrl=queue_url,
-        MessageBody=message,
+        MessageBody=json.dumps(message.to_dict()),
     )
