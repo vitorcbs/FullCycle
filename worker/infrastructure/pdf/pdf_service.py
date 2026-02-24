@@ -41,6 +41,7 @@ def extract_year(text: str) -> int:
 
 
 def parse_nubank_invoice(file_path: str) -> list[Transaction]:
+
     transactions = []
 
     with pdfplumber.open(file_path) as pdf:
