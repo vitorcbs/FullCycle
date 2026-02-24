@@ -1,11 +1,17 @@
-def get_other_category_id(user_id, db_session):
-    from infrastructure.database.models import Category
+from sqlalchemy import text
 
-    category = (
-        db_session.query(Category)
-        .filter(Category.user_id == user_id)
-        .filter(Category.name == "Outros")
-        .first()
+
+def get_other_category_id(user_id, db_session):
+    query = text(
+        """
+        SELECT id
+        FROM categories
+        WHERE user_id = :user_id
+          AND name = 'Outros'
+        LIMIT 1
+        """
     )
 
-    return category.id if category else None
+    row = db_session.execute(query, {"user_id": user_id}).mappings().first()
+
+    return row["id"] if row else None
